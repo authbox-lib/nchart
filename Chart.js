@@ -8,11 +8,15 @@
  * https://github.com/nnnick/Chart.js/blob/master/LICENSE.md
  */
 
+// hacked for io.js/node.js
+
+var _window = typeof window === 'undefined' ? global : window;
+
 (function(){
 
 	"use strict";
 
-	//Declare root variable - window in the browser, global on the server
+	//Declare root variable - _window in the browser, global on the server
 	var root = this,
 		previous = root.Chart;
 
@@ -299,7 +303,7 @@
 		})(),
 		warn = helpers.warn = function(str){
 			//Method for warning of errors
-			if (window.console && typeof window.console.warn == "function") console.warn(str);
+			if (_window.console && typeof _window.console.warn == "function") console.warn(str);
 		},
 		amd = helpers.amd = (typeof define == 'function' && define.amd),
 		//-- Math methods
@@ -664,23 +668,23 @@
 		},
 		//Request animation polyfill - http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
 		requestAnimFrame = helpers.requestAnimFrame = (function(){
-			return window.requestAnimationFrame ||
-				window.webkitRequestAnimationFrame ||
-				window.mozRequestAnimationFrame ||
-				window.oRequestAnimationFrame ||
-				window.msRequestAnimationFrame ||
+			return _window.requestAnimationFrame ||
+				_window.webkitRequestAnimationFrame ||
+				_window.mozRequestAnimationFrame ||
+				_window.oRequestAnimationFrame ||
+				_window.msRequestAnimationFrame ||
 				function(callback) {
-					return window.setTimeout(callback, 1000 / 60);
+					return _window.setTimeout(callback, 1000 / 60);
 				};
 		})(),
 		cancelAnimFrame = helpers.cancelAnimFrame = (function(){
-			return window.cancelAnimationFrame ||
-				window.webkitCancelAnimationFrame ||
-				window.mozCancelAnimationFrame ||
-				window.oCancelAnimationFrame ||
-				window.msCancelAnimationFrame ||
+			return _window.cancelAnimationFrame ||
+				_window.webkitCancelAnimationFrame ||
+				_window.mozCancelAnimationFrame ||
+				_window.oCancelAnimationFrame ||
+				_window.msCancelAnimationFrame ||
 				function(callback) {
-					return window.clearTimeout(callback, 1000 / 60);
+					return _window.clearTimeout(callback, 1000 / 60);
 				};
 		})(),
 		animationLoop = helpers.animationLoop = function(callback,totalSteps,easingString,onProgress,onComplete,chartInstance){
@@ -776,12 +780,12 @@
 				width = chart.canvas.width,
 				height = chart.canvas.height;
 
-			if (window.devicePixelRatio) {
+			if (_window.devicePixelRatio) {
 				//ctx.canvas.style.width = width + "px";
 				//ctx.canvas.style.height = height + "px";
-				ctx.canvas.height = height * window.devicePixelRatio;
-				ctx.canvas.width = width * window.devicePixelRatio;
-				ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+				ctx.canvas.height = height * _window.devicePixelRatio;
+				ctx.canvas.width = width * _window.devicePixelRatio;
+				ctx.scale(_window.devicePixelRatio, _window.devicePixelRatio);
 			}
 		},
 		//-- Canvas methods
@@ -815,7 +819,7 @@
 		};
 
 
-	//Store a reference to each instance - allowing us to globally resize chart instances on window resize.
+	//Store a reference to each instance - allowing us to globally resize chart instances on _window resize.
 	//Destroy method on the chart will remove the instance of the chart from this reference.
 	Chart.instances = {};
 
@@ -1985,7 +1989,7 @@
 	});
 
 	// Attach global event to resize each chart instance when the browser resizes
-	helpers.addEvent(window, "resize", (function(){
+	helpers.addEvent(_window, "resize", (function(){
 		// Basic debounce of resize function so it doesn't hurt performance when resizing browser.
 		var timeout;
 		return function(){
